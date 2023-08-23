@@ -32,6 +32,8 @@ model Pet {
   energy_level          String
   level_of_independence String
   environment           String
+  photo                 String
+  city                  String
 
   org    Org    @relation(fields: [org_id], references: [id])
   org_id String
