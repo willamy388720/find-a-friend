@@ -2,13 +2,13 @@ import { InMemoryOrgsRepository } from "src/repositories/in-memory/in-memory-org
 import { hash } from "bcryptjs";
 import { InMemoryPetsRepository } from "src/repositories/in-memory/in-memory-pets-repository";
 import { ResourceNotFoundError } from "src/errors/resource-not-found-error";
-import { FetchPetService } from "src/services/pets/fetch-pet";
+import { FetchPetService } from "@/services/pets/fetch-pets";
 
 let inMemoryOrgsRepository: InMemoryOrgsRepository;
 let inMemoryPetsRepository: InMemoryPetsRepository;
 let sut: FetchPetService;
 
-describe("Fetch Pet Service", () => {
+describe("Fetch Pets Service", () => {
   beforeEach(() => {
     inMemoryOrgsRepository = new InMemoryOrgsRepository();
     inMemoryPetsRepository = new InMemoryPetsRepository();
