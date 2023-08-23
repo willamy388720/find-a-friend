@@ -1,21 +1,23 @@
 import { InMemoryOrgsRepository } from "src/repositories/in-memory/in-memory-orgs-repository";
-import { hash } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
+import { OrgAlreadyExistsError } from "src/errors/org-already-exists-error";
 import { InMemoryPetsRepository } from "src/repositories/in-memory/in-memory-pets-repository";
 import { CreatePetService } from "src/services/pets/create-pet";
 import { ResourceNotFoundError } from "src/errors/resource-not-found-error";
+import { GetPetService } from "src/services/pets/get-pet";
 
 let inMemoryOrgsRepository: InMemoryOrgsRepository;
 let inMemoryPetsRepository: InMemoryPetsRepository;
-let sut: CreatePetService;
+let sut: GetPetService;
 
-describe("Create Pet Service", () => {
+describe("Get Pet Service", () => {
   beforeEach(() => {
     inMemoryOrgsRepository = new InMemoryOrgsRepository();
     inMemoryPetsRepository = new InMemoryPetsRepository();
-    sut = new CreatePetService(inMemoryOrgsRepository, inMemoryPetsRepository);
+    sut = new GetPetService(inMemoryPetsRepository);
   });
 
-  it("should be able to create pet", async () => {
+  it("should be able to get pet", async () => {
     const org = await inMemoryOrgsRepository.create({
       name: "Organização Zé das Cabras",
       email: "zedascabras@org.com",
@@ -25,32 +27,29 @@ describe("Create Pet Service", () => {
       whatsapp: "(99) 99999-9999",
     });
 
-    const { pet } = await sut.execute({
-      orgId: org.id,
+    const pet = await inMemoryPetsRepository.create({
+      org_id: org.id,
       name: "Branaldiz Jr.",
       description: "Eh um papalegua tetraplegico",
       size: "pequeno",
-      energyLevel: "baixo",
-      levelOfIndependence: "quase nada",
+      energy_level: "baixo",
+      level_of_independence: "quase nada",
       environment: "aquatico",
       photo: "asdjkashjkdhaskjhdjkhasjk",
+      city: "Fortaleza",
     });
 
-    expect(pet.id).toEqual(expect.any(String));
-    expect(pet).toEqual(expect.objectContaining({ city: "Ocara" }));
+    sut.execute({
+      id: pet.id,
+    });
+
+    expect(pet).toEqual(expect.objectContaining({ city: "Fortaleza" }));
   });
 
-  it("should not be able create pet with wrong org", async () => {
+  it("should not be able create pet with wrong id", async () => {
     await expect(() =>
       sut.execute({
-        orgId: "1",
-        name: "Branaldiz Jr.",
-        description: "Eh um papalegua tetraplegico",
-        size: "pequeno",
-        energyLevel: "baixo",
-        levelOfIndependence: "quase nada",
-        environment: "aquatico",
-        photo: "asdjkashjkdhaskjhdjkhasjk",
+        id: "1",
       })
     ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });

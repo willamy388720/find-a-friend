@@ -26,7 +26,7 @@ export class InMemoryPetsRepository implements PetsRepository {
       level_of_independence: data.level_of_independence,
       environment: data.environment,
       photo: data.photo,
-      city: data.city,
+      city: data.city ?? "Ocara",
     };
 
     this.items.push(pet);
