@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { PetsRepository } from "../pets-repository";
 
 export class InMemoryPetsRepository implements PetsRepository {
-  private items: Pet[] = [];
+  public items: Pet[] = [];
 
   async findById(id: string) {
     const pet = this.items.find((item) => item.id === id);
@@ -13,6 +13,23 @@ export class InMemoryPetsRepository implements PetsRepository {
     }
 
     return pet;
+  }
+
+  async findByFilters(
+    city: string,
+    size: string,
+    energyLevel: string,
+    levelOfIndependence: string
+  ) {
+    const pets = this.items.filter(
+      (item) =>
+        item.city === city &&
+        item.size.includes(size) &&
+        item.energy_level.includes(energyLevel) &&
+        item.level_of_independence.includes(levelOfIndependence)
+    );
+
+    return pets;
   }
 
   async create(data: Prisma.PetUncheckedCreateInput) {

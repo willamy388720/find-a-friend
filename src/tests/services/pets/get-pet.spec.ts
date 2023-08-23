@@ -1,8 +1,6 @@
 import { InMemoryOrgsRepository } from "src/repositories/in-memory/in-memory-orgs-repository";
-import { compare, hash } from "bcryptjs";
-import { OrgAlreadyExistsError } from "src/errors/org-already-exists-error";
+import { hash } from "bcryptjs";
 import { InMemoryPetsRepository } from "src/repositories/in-memory/in-memory-pets-repository";
-import { CreatePetService } from "src/services/pets/create-pet";
 import { ResourceNotFoundError } from "src/errors/resource-not-found-error";
 import { GetPetService } from "src/services/pets/get-pet";
 
